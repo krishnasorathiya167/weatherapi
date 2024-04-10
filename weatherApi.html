@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather</title>
+
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css" />
+
+
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="search-bar">
+            <i class="bx bxs-map"></i>
+            <input type="text" placeholder="Enter Your Location" id="city" />
+            <button onclick="weather()"><i class="bx bx-search"></i></button>
+        </div>
+        <div class="weather-box">
+            <div class="box">
+                <div class="weather">
+                    <img src="https://static.vecteezy.com/system/resources/previews/022/287/817/original/3d-rendering-sun-ahead-of-the-clouds-icon-3d-render-weather-sun-cloud-icon-sun-ahead-of-the-clouds-png.png"
+                        alt="">
+                    <p class="description" id="description">CityName</p>
+                    <p><span class="tempreture" id="tempreture">0</span> <span class="celci">°C</span> </p>
+                </div>
+            </div>
+        </div>
+        <div class="weather-detail">
+            <div class="humidity">
+                <i class='bx bx-water'></i>
+                <div class="text">
+                    <div class="info">
+                        <p><span id="humidity">0 </span> %</p>
+                    </div>
+                    <p>Humidity</p>
+                </div>
+            </div>
+
+            <div class="wind">
+                <i class='bx bx-wind'></i>
+                <div class="text">
+                    <div class="info">
+                        <p><span id="wind">0 </span> Km/h</p>
+                    </div>
+                    <p>Wind Speed</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+
+    <h1 class="weather-data">Weather Of The Other Common Places</h1>
+
+    <table border="1" cellspacing="0">
+        <thead>
+            <tr>
+                <td>City Name</td>
+                <td>tempreture</td>
+                <td>Feels_Like</td>
+                <td>Humidity</td>
+                <td>Max_Temp</td>
+                <td>Min_temp</td>
+                <td>Sunrise</td>
+                <td>Sunset</td>
+                <td>Wind_degree</td>
+                <td>Wind_speed</td>
+            </tr>
+        </thead>
+        <tbody id="tbody">
+
+        </tbody>
+    </table>
+
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+
+    <script>
+
+        let weatherInfo = JSON.parse(localStorage.getItem("weatherInfo")) || [];
+
+        async function weather() {
+            let city = document.getElementById("city").value;
+
+            const url = `https://weather-api138.p.rapidapi.com/weather?city_name=${city}`;
+            const options = {
+                method: 'GET',
+                headers: {
+                    'X-RapidAPI-Key': 'b00a4eb00emsh613c392ece87b40p1b77b3jsn72af5d5b5a1b',
+                    'X-RapidAPI-Host': 'weather-api138.p.rapidapi.com'
+                }
+            };
+
+            try {
+                const response = await fetch(url, options);
+                const result = await response.json();
+                console.log(result);
+                weatherInfo.push({data:result});
+                console.log(weatherInfo);
+                localStorage.setItem("weatherInfo", JSON.stringify(weatherInfo));
+
+                tempreture.innerHTML = result.main.temp;
+                description.innerHTML = city;
+                humidity.innerHTML = result.main.humidity;
+                wind.innerHTML = result.wind.speed;
+
+            } catch (error) {
+                console.error(error);
+            }
+            
+            location.reload()
+        }
+
+         async function weatherdetail(){
+            let data = JSON.parse(localStorage.getItem("weatherInfo"))
+
+            let tbody = document.getElementById("tbody");
+            data.map((val)=>{
+                let tr = document.createElement("tr");
+                tr.innerHTML = `<td>${val.data.name}</td>
+                                <td>${val.data.main.temp}°C</td>
+                                <td>${val.data.main.feels_like}</td>
+                                <td>${val.data.main.humidity}%</td>
+                                <td>${val.data.main.temp_max}</td>
+                                <td>${val.data.main.temp_min}</td>
+                                <td>${val.data.sys.sunrise}</td>
+                                <td>${val.data.sys.sunset}</td>
+                                <td>${val.data.wind.deg}</td>
+                                <td>${val.data.wind.speed}Km/h</td>`
+                tbody.appendChild(tr);
+            })
+        
+        }
+        weatherdetail()
+       
+    </script>
+</body>
+
+</html>
