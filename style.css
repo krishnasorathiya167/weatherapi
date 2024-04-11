@@ -151,7 +151,6 @@ body {
 .weather-detail{
     position: absolute;
     bottom: 40px;
-    /* left: 0; */
     width: 100%;
     padding: 0 20px;
     display: flex;
@@ -202,7 +201,8 @@ table{
     text-align: center;
 }
 
-table td{
+table td,
+table th{
     padding: 15px;
     color: #fff;
 }

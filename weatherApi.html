@@ -65,16 +65,16 @@
     <table border="1" cellspacing="0">
         <thead>
             <tr>
-                <td>City Name</td>
-                <td>tempreture</td>
-                <td>Feels_Like</td>
-                <td>Humidity</td>
-                <td>Max_Temp</td>
-                <td>Min_temp</td>
-                <td>Sunrise</td>
-                <td>Sunset</td>
-                <td>Wind_degree</td>
-                <td>Wind_speed</td>
+                <th>City Name</th>
+                <th>tempreture</th>
+                <th>Feels_Like</th>
+                <th>Humidity</th>
+                <th>Max_Temp</th>
+                <th>Min_temp</th>
+                <th>Sunrise</th>
+                <th>Sunset</th>
+                <th>Wind_degree</th>
+                <th>Wind_speed</th>
             </tr>
         </thead>
         <tbody id="tbody">
@@ -88,7 +88,7 @@
 
         let weatherInfo = JSON.parse(localStorage.getItem("weatherInfo")) || [];
 
-        async function weather() {
+        async function weather(ind) {
             let city = document.getElementById("city").value;
 
             const url = `https://weather-api138.p.rapidapi.com/weather?city_name=${city}`;
@@ -104,8 +104,10 @@
                 const response = await fetch(url, options);
                 const result = await response.json();
                 console.log(result);
+
                 weatherInfo.push({data:result});
                 console.log(weatherInfo);
+
                 localStorage.setItem("weatherInfo", JSON.stringify(weatherInfo));
 
                 tempreture.innerHTML = result.main.temp;
@@ -116,14 +118,14 @@
             } catch (error) {
                 console.error(error);
             }
-            
-            location.reload()
+            weatherdetail()
         }
 
          async function weatherdetail(){
             let data = JSON.parse(localStorage.getItem("weatherInfo"))
 
             let tbody = document.getElementById("tbody");
+            tbody.innerHTML =  " "
             data.map((val)=>{
                 let tr = document.createElement("tr");
                 tr.innerHTML = `<td>${val.data.name}</td>
@@ -138,9 +140,10 @@
                                 <td>${val.data.wind.speed}Km/h</td>`
                 tbody.appendChild(tr);
             })
-        
+            
         }
         weatherdetail()
+        
        
     </script>
 </body>
